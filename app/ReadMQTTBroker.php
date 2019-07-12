@@ -11,19 +11,12 @@ use unreal4u\MQTT\DataTypes\TopicFilter;
 
 class ReadMQTTBroker extends Base {
     /**
-     * @var string
-     */
-    private $stateFileLocation;
-
-    /**
      * Will be executed once before running the actual job
      *
      * @return JobContract
      */
     public function setUp(): JobContract
     {
-	$this->stateFileLocation = __DIR__ . '/../state/current.state';
-
         return $this;
     }
 
@@ -31,7 +24,7 @@ class ReadMQTTBroker extends Base {
     {
         $this
             ->setName('light-trio:mqtt-listener')
-            ->setDescription('Subscribes to MQTT and writes incoming commands to a file')
+            ->setDescription('Subscribes to MQTT and writes incoming commands to another topic')
             ->setHelp('TODO')
         ;
     }
@@ -45,8 +38,9 @@ class ReadMQTTBroker extends Base {
     {
         $mqttCommunicator = $this->communicationsFactory('MQTT');
         $topicFilter = new TopicFilter('status/playroom/light');
-        $mqttCommunicator->subscribeToTopic($topicFilter, function(Message $message) {
-            file_put_contents($this->stateFileLocation, $message->getPayload());
+        $mqttCommunicator->subscribeToTopic($topicFilter, function(Message $message) use ($mqttCommunicator) {
+	    $mqttCommunicator->sendMessage('commands/singlelamp/Power1', $message->getPayload());
+	    $mqttCommunicator->sendMessage('commands/doublelamp/Power1', $message->getPayload());
         });
         return true;
     }
