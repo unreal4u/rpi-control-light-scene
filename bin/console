@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../config.php';
+
+use Symfony\Component\Console\Application;
+use unreal4u\ControlLightTrio\ReadMQTTBroker;
+use unreal4u\ControlLightTrio\ReadStateFile;
+
+$application = new Application();
+$application->add(new ReadMQTTBroker());
+$application->add(new ReadStateFile());
+$application->run();
+

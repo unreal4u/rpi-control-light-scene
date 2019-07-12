@@ -1,0 +1,12 @@
+{
+    "require": {
+        "php": ">=7.0",
+        "piphp/gpio": "~0.3",
+        "unreal4u/rpi-common-libraries": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "unreal4u\\ControlLightTrio\\": "app"
+        }
+    }
+}
